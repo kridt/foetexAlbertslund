@@ -79,10 +79,10 @@ export default function Dashboard() {
           date: dato,
           device: window.navigator.userAgent,
           votedCoworkerName: allCoworkers?.find(
-            (person) => person.sallingId === parseFloat(votedCoworker)
+            (person) => person["Person ID"] === parseFloat(votedCoworker)
           ).name,
           votedCoworkerDep: allCoworkers?.find(
-            (person) => person.sallingId === parseFloat(votedCoworker)
+            (person) => person["Person ID"] === parseFloat(votedCoworker)
           ).dep,
         })
         .then(() => {
