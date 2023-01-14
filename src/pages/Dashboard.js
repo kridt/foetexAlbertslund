@@ -4,15 +4,14 @@ import { database } from "../firebase";
 
 export default function Dashboard() {
   const departementsList = [
-    { name: "Service", id: 602 },
-    { name: "Service", id: 605 },
+    { name: "Kundeservice", id: 602 },
+    { name: "Bager", id: 605 },
     { name: "Service", id: 608 },
     { name: "Service", id: 604 },
-    { name: "IDK", id: "040" },
-    { name: "IDK", id: "080" },
-    { name: "IDK", id: "030" },
-    { name: "IDK", id: 310 },
-    { name: "IDK", id: "080" },
+    { name: "Frugt & Grønt", id: "040" },
+    { name: "Food", id: "080" },
+    { name: "Freshfood", id: "030" },
+    { name: "Nonfood", id: 310 }
   ];
 
   const navigate = useNavigate();
