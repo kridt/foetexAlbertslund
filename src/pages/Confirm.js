@@ -30,7 +30,7 @@ export default function Confirm() {
           console.log(item);
           var docRef = database
             .collection("allCoworkers")
-            .doc("coworker-" + item.sallingId);
+            .doc("coworker-" + item["Person ID"]);
           batch.set(docRef, item);
         });
 
@@ -67,6 +67,10 @@ export default function Confirm() {
       <p>Der er {potentielNewDatabase.length} medarbejdere på listen</p>
       <div>
         {potentielNewDatabase.map((item) => {
+          const name = item.Navn.split(", ");
+          const fornavn = name[1];
+          const efternavn = name[0];
+          console.log(item);
           return (
             <div
               style={{
@@ -76,8 +80,9 @@ export default function Confirm() {
               }}
               key={item.sallingId}
             >
-              <p>Navn: {item.name}</p>
-              <p>Lønnummer: {item.sallingId}</p>
+              <p>Navn: {fornavn + " " + efternavn}</p>
+              <p>Lønnummer: {item["Person ID"]}</p>
+              <p>Afdeling: {item["Afd."]}</p>
               <p>Leder?: {item.leder ? <>ja</> : <>nej</>}</p>
             </div>
           );

@@ -14,20 +14,23 @@ export default function Login() {
         setAllCoworkers(data);
         localStorage.setItem("allCoworkers", JSON.stringify(data));
       });
+
+    console.log(allCoworkers);
   }, [setAllCoworkers]);
 
   function handleLogin(e) {
     e.preventDefault();
     const sallingId = e.target.value;
+
     if (sallingId.length === 6) {
       var foundCoworker = allCoworkers.find(
-        (coworker) => coworker.sallingId === parseInt(sallingId)
+        (coworker) => coworker["Person ID"] === parseInt(sallingId)
       );
 
       console.log(foundCoworker);
       if (foundCoworker) {
         localStorage.setItem("currentCoworker", JSON.stringify(foundCoworker));
-        navigate("/dashboard/" + foundCoworker.sallingId);
+        navigate("/dashboard/" + foundCoworker["Person ID"]);
       } else {
         alert("Dit lønnummer er forkert");
       }

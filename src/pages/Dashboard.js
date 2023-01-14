@@ -3,6 +3,18 @@ import { Link, useNavigate } from "react-router-dom";
 import { database } from "../firebase";
 
 export default function Dashboard() {
+  const departementsList = [
+    { name: "Service", id: 602 },
+    { name: "Service", id: 605 },
+    { name: "Service", id: 608 },
+    { name: "Service", id: 604 },
+    { name: "IDK", id: "040" },
+    { name: "IDK", id: "080" },
+    { name: "IDK", id: "030" },
+    { name: "IDK", id: 310 },
+    { name: "IDK", id: "080" },
+  ];
+
   const navigate = useNavigate();
   const [voted, setVoted] = useState(false);
   const [allCoworkers, setAllCoworkers] = useState([]);
@@ -10,16 +22,17 @@ export default function Dashboard() {
   const [voterble, setVoterble] = useState([]);
   const [vote, setVote] = useState({});
   const [admin, setAdmin] = useState(false);
-
+  const [currentCoworkerName, setCurrentCoworkerName] = useState("");
   useEffect(() => {
     const allCoworkers = JSON.parse(localStorage.getItem("allCoworkers"));
     const currentCoworker = JSON.parse(localStorage.getItem("currentCoworker"));
-
+    var name = currentCoworker.Navn.split(", ");
+    setCurrentCoworkerName(name[1] + " " + name[0]);
     allCoworkers?.forEach((coworker) => {
       var nonLeaders = allCoworkers?.filter(
         (coworker) => coworker.leader === false
       );
-      setVoterble(nonLeaders);
+      setVoterble(allCoworkers);
     });
     setAllCoworkers(allCoworkers);
     setCurrentCoworker(currentCoworker);
@@ -30,7 +43,7 @@ export default function Dashboard() {
       .then((querySnapshot) => {
         const data = querySnapshot.docs.map((doc) => doc.data());
         const voted = data.find(
-          (item) => item.votedBy === currentCoworker?.sallingId
+          (item) => item.votedBy === currentCoworker["Person ID"]
         );
 
         if (voted) {
@@ -41,8 +54,8 @@ export default function Dashboard() {
       });
 
     if (
-      currentCoworker?.sallingId === 286828 ||
-      currentCoworker?.sallingId === 125813
+      currentCoworker["Person ID"] === 286828 ||
+      currentCoworker["Person ID"] === 125811
     ) {
       setAdmin(true);
     }
@@ -58,11 +71,11 @@ export default function Dashboard() {
     try {
       database
         .collection("votes")
-        .doc(`stemme-${currentCoworker?.sallingId}`)
+        .doc(`stemme-${currentCoworker["Person ID"]}`)
         .set({
           votedCoworker: parseFloat(votedCoworker),
           description: description,
-          votedBy: currentCoworker?.sallingId,
+          votedBy: currentCoworker["Person ID"],
           date: dato,
           device: window.navigator.userAgent,
           votedCoworkerName: allCoworkers?.find(
@@ -86,7 +99,7 @@ export default function Dashboard() {
     if (window.confirm("Er du sikker på du vil slette din stemme?")) {
       database
         .collection("votes")
-        .doc(`stemme-${currentCoworker?.sallingId}`)
+        .doc(`stemme-${currentCoworker["Person ID"]}`)
         .delete()
         .then(() => {
           alert("Din stemme er nu slettet");
@@ -99,7 +112,7 @@ export default function Dashboard() {
   return (
     <div style={{ color: "#fff", textAlign: "center" }}>
       <button onClick={() => navigate("/")}>Log ud</button>
-      <h1>Hej {currentCoworker?.name}</h1>
+      <h1>Hej {currentCoworkerName}</h1>
 
       {voted ? (
         <>
@@ -119,9 +132,19 @@ export default function Dashboard() {
             <br />
             <select name="vote">
               {voterble?.map((coworker) => {
+                const name = coworker.Navn.split(", ");
+                const fullName = name[1] + " " + name[0];
+                const dep = departementsList.find(
+                  (dep) => dep.id === coworker["Afd."]
+                );
+
                 return (
-                  <option value={coworker.sallingId} key={coworker.sallingId}>
-                    {coworker.name} fra {coworker.dep} afdelingen
+                  <option
+                    value={coworker["Person ID"]}
+                    key={coworker["Person ID"]}
+                  >
+                    {fullName} fra {dep?.name + " "}
+                    afdelingen
                   </option>
                 );
               })}
