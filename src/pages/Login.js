@@ -14,13 +14,7 @@ export default function Login() {
         setAllCoworkers(data);
         localStorage.setItem("allCoworkers", JSON.stringify(data));
       });
-<<<<<<< HEAD
   }, [setAllCoworkers]);
-=======
-
-    console.log(allCoworkers);
-  }, [setAllCoworkers, allCoworkers]);
->>>>>>> 6e64c9520a465c14a82c5b6438166d0bffdc995c
 
   function handleLogin(e) {
     e.preventDefault();
