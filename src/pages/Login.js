@@ -16,7 +16,7 @@ export default function Login() {
       });
 
     console.log(allCoworkers);
-  }, [setAllCoworkers]);
+  }, [setAllCoworkers, allCoworkers]);
 
   function handleLogin(e) {
     e.preventDefault();
