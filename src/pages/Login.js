@@ -14,8 +14,6 @@ export default function Login() {
         setAllCoworkers(data);
         localStorage.setItem("allCoworkers", JSON.stringify(data));
       });
-
-    console.log(allCoworkers);
   }, [setAllCoworkers]);
 
   function handleLogin(e) {

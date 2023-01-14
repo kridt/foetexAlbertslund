@@ -80,10 +80,10 @@ export default function Dashboard() {
           device: window.navigator.userAgent,
           votedCoworkerName: allCoworkers?.find(
             (person) => person["Person ID"] === parseFloat(votedCoworker)
-          ).name,
+          ).Navn,
           votedCoworkerDep: allCoworkers?.find(
             (person) => person["Person ID"] === parseFloat(votedCoworker)
-          ).dep,
+          )["Afd."],
         })
         .then(() => {
           alert("Din stemme er nu registreret");
@@ -109,6 +109,7 @@ export default function Dashboard() {
       return;
     }
   }
+  console.log(vote);
   return (
     <div style={{ color: "#fff", textAlign: "center" }}>
       <button onClick={() => navigate("/")}>Log ud</button>
