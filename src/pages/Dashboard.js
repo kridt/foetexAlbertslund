@@ -11,7 +11,7 @@ export default function Dashboard() {
     { name: "Frugt & Grønt", id: "040" },
     { name: "Food", id: "080" },
     { name: "Freshfood", id: "030" },
-    { name: "Nonfood", id: 310 }
+    { name: "Nonfood", id: 310 },
   ];
 
   const navigate = useNavigate();
@@ -29,9 +29,9 @@ export default function Dashboard() {
     setCurrentCoworkerName(name[1] + " " + name[0]);
     allCoworkers?.forEach((coworker) => {
       var nonLeaders = allCoworkers?.filter(
-        (coworker) => coworker.leader === false
+        (coworker) => coworker.leder === false
       );
-      setVoterble(allCoworkers);
+      setVoterble(nonLeaders);
     });
     setAllCoworkers(allCoworkers);
     setCurrentCoworker(currentCoworker);
@@ -44,11 +44,16 @@ export default function Dashboard() {
         const voted = data.find(
           (item) => item.votedBy === currentCoworker["Person ID"]
         );
+        const findVotedCoworker = allCoworkers?.find(
+          (coworker) => coworker["Person ID"] === voted?.votedCoworker
+        );
 
+        findVotedCoworker.description = voted?.description;
+        console.log(findVotedCoworker);
         if (voted) {
           setVoted(true);
 
-          setVote(voted);
+          setVote(findVotedCoworker);
         }
       });
 
@@ -65,24 +70,26 @@ export default function Dashboard() {
     const votedCoworker = e.target.vote.value;
     const description = e.target.description.value;
     const dato = new Date();
-    console.log(dato);
+    const voteId = e.target.vote.nextElementSibling.firstChild.id;
+
+    const votedCoworkerId = votedCoworker.split(" ");
+
+    const findVotedCoworker = voterble?.find(
+      (c) => c.Navn === `${votedCoworkerId[1] + ", " + votedCoworkerId[0]}`
+    );
+
+    console.log(findVotedCoworker);
 
     try {
       database
         .collection("votes")
         .doc(`stemme-${currentCoworker["Person ID"]}`)
         .set({
-          votedCoworker: parseFloat(votedCoworker),
+          votedCoworker: parseFloat(findVotedCoworker["Person ID"]),
           description: description,
           votedBy: currentCoworker["Person ID"],
           date: dato,
           device: window.navigator.userAgent,
-          votedCoworkerName: allCoworkers?.find(
-            (person) => person["Person ID"] === parseFloat(votedCoworker)
-          ).Navn,
-          votedCoworkerDep: allCoworkers?.find(
-            (person) => person["Person ID"] === parseFloat(votedCoworker)
-          )["Afd."],
         })
         .then(() => {
           alert("Din stemme er nu registreret");
@@ -108,7 +115,7 @@ export default function Dashboard() {
       return;
     }
   }
-  console.log(vote);
+
   return (
     <div style={{ color: "#fff", textAlign: "center" }}>
       <button onClick={() => navigate("/")}>Log ud</button>
@@ -117,8 +124,8 @@ export default function Dashboard() {
       {voted ? (
         <>
           <h3>Du har allerede stem på månedens medarbejder</h3>
-          <p>Stemme: {vote?.votedCoworkerName}</p>
-          <p>Afdeling: {vote?.votedCoworkerDep}</p>
+          <p>Stemme: {vote?.Navn}</p>
+          <p>Afdeling: {vote["Afd."]}</p>
           <p>Beskrivelse: {vote?.description}</p>
           <br />
           <br />
@@ -130,7 +137,29 @@ export default function Dashboard() {
             <label>Hvem vil du stemme på?</label>
             <br />
             <br />
-            <select name="vote">
+
+            <input list="voting" id="vote" name="vote" />
+
+            <datalist name="test" id="voting">
+              {voterble?.map((coworker) => {
+                const name = coworker.Navn.split(", ");
+                const fullName = name[1] + " " + name[0];
+
+                const dep = departementsList.find(
+                  (dep) => dep.id === coworker["Afd."]
+                );
+
+                return (
+                  <option
+                    value={fullName + " fra " + dep?.name + " afdelingen"}
+                    key={coworker["Person ID"]}
+                    id={coworker["Person ID"]}
+                  />
+                );
+              })}
+            </datalist>
+
+            {/* <select name="vote">
               {voterble?.map((coworker) => {
                 const name = coworker.Navn.split(", ");
                 const fullName = name[1] + " " + name[0];
@@ -148,7 +177,7 @@ export default function Dashboard() {
                   </option>
                 );
               })}
-            </select>
+            </select> */}
             <br />
             <br />
             <div>
