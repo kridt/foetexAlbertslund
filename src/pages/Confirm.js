@@ -5,7 +5,7 @@ import { database } from "../firebase";
 export default function Confirm() {
   const leaderList = [
     286828, 103978, 106490, 115692, 149387, 160851, 169586, 180542, 191333,
-    242894, 218368,
+    242894, 218368, 185653
   ];
   const [potentielNewDatabase, setPotentielNewDatabase] = useState([]);
   const navigate = useNavigate();
