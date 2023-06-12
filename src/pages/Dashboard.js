@@ -57,10 +57,7 @@ export default function Dashboard() {
         }
       });
 
-    if (
-      currentCoworker["Person ID"] === 286828 ||
-      currentCoworker["Person ID"] === 125811
-    ) {
+    if (currentCoworker["Person ID"] === 286828) {
       setAdmin(true);
     }
   }, []);
@@ -72,12 +69,13 @@ export default function Dashboard() {
     const dato = new Date();
     const voteId = e.target.vote.nextElementSibling.firstChild.id;
 
-    const votedCoworkerId = votedCoworker.split(" ");
+    const votedCoworkerName = votedCoworker.split(" fra ")[0];
 
-    const findVotedCoworker = voterble?.find(
-      (c) => c.Navn === `${votedCoworkerId[1] + ", " + votedCoworkerId[0]}`
+    const findVotedCoworker = allCoworkers?.find(
+      (coworker) =>
+        coworker.Navn.split(", ")[1] + " " + coworker.Navn.split(", ")[0] ===
+        votedCoworkerName
     );
-
     console.log(findVotedCoworker);
 
     try {
@@ -85,7 +83,7 @@ export default function Dashboard() {
         .collection("votes")
         .doc(`stemme-${currentCoworker["Person ID"]}`)
         .set({
-          votedCoworker: parseFloat(findVotedCoworker["Person ID"]),
+          votedCoworker: findVotedCoworker["Person ID"],
           description: description,
           votedBy: currentCoworker["Person ID"],
           date: dato,
