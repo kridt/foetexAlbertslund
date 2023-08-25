@@ -13,6 +13,7 @@ export default function Login() {
         const data = querySnapshot.docs.map((doc) => doc.data());
         setAllCoworkers(data);
         localStorage.setItem("allCoworkers", JSON.stringify(data));
+        console.log(data)
       });
   }, [setAllCoworkers]);
 
